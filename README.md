@@ -70,4 +70,7 @@ optional arguments:
 ozberk@mainac:~/Projects/OOP/Source$ python3 main.py -i 213.74.26.138  -ex -ab
 ```
 
+## Known Issues
+
+- Virustotal IP reporting is possible but not supported yet.
 
