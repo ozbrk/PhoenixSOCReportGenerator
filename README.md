@@ -69,41 +69,5 @@ optional arguments:
 ```bash
 ozberk@mainac:~/Projects/OOP/Source$ python3 main.py -i 213.74.26.138  -ex -ab
 ```
-## Example Outputs
 
-``` bash
-
-IP Reputation 199.59.242.153 :
-Risk Score: Medium
-Categorization: Anonymisation Services , Malware , Botnet Command and Control Server 
-Location: United States
-Registrant Organization: Bodis, LLC
-Registrar Name: ARIN
------------------------------------------------------------------------------
-Serach more with:
-https://exchange.xforce.ibmcloud.com/ip/199.59.242.153
-https://www.abuseipdb.com/check/199.59.242.153
-https://www.virustotal.com/gui/ip-address/199.59.242.153/detection
------------------------------------------------------------------------------
-```
-
-``` bash
-ozberk@maniac:~/Projects/OOP/Source$ python3 main.py -f ef1ede95aa196c83c4138e4766e0d9fb -ex
-Risk Score: N/A
-Hash Name: ef1ede95aa196c83c4138e4766e0d9fb
-Hash Type: md5
-SHA256: N/A
-Report Source: reversingLabs
-Malware Type: N/A
-Malware Platform: N/A
- ```
- 
- 
-
-
-
-
-## Known Issues
-
-- Virustotal IP reporting is possible but not supported yet.
 

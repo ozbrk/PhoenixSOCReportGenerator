@@ -1,3 +1,5 @@
+import sys
+
 class xforceurlcheck:
     
     def __init__ (self, urlreport_data, urlwhois_data, url):
@@ -17,7 +19,13 @@ class xforceurlcheck:
         print("----------------------------------")
 
         """
-
+        try:
+            url_resolve = str(self.urlreport_data["result"])
+        except KeyError:
+            print("This url has not been fouund on out database")
+            print("Please check the following")
+            print("https://exchange.xforce.ibmcloud.com/url/" + self.url)
+            sys.exit(0)
         try:
             url_name = str(self.urlreport_data["result"]["url"])
         except KeyError:
@@ -35,16 +43,23 @@ class xforceurlcheck:
             url_registrar_name = str(self.urlwhois_data["registrarName"])
         except KeyError:
             url_registrar_name = "N/A"
-        
+
+        try:
+            contactinfo = str(self.urlwhois_data["contact"])
+        except:
+            print("No Contact Information Data Have Been Reported")
+            print("Please check the following")
+            print("https://exchange.xforce.ibmcloud.com/url/" + self.url)
+    
         try:
             url_registrant_org = str(self.urlwhois_data["contact"][0]["organization"])
         except KeyError:
-            raise
+            url_registrant_org = "N/A"
         
         try:
             url_risk_score = float(self.urlreport_data["result"]["score"])
         except KeyError:
-            raise
+            url_risk_score = "N/A" 
 
         if url_risk_score < 4.0:
             url_risk_score_str = "Low"

@@ -24,10 +24,11 @@ class AbuseIPDB:
             country = str(self.decodedResponse["data"]["countryCode"])
         except KeyError:
             country = "N/A"
-        
+        print(" ")        
         print(f"IP Report For" + " " + ip_string)
         print(f"Abuse IP DB Score:" + ip_confidence)
         print(f"ISP:" + " " + isp)
         print(f"Country:" + " " + country )
         print("Reports: Reports cannot be provided by the current version of this script please visit the following url https://www.abuseipdb.com/check/" + self.ip )
-        #print(c)
+        print(" ")
+     
