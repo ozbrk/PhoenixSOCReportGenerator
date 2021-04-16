@@ -22,14 +22,14 @@ from ibmhashcheck import ibmhashcheck
 
 """ IBM API KEY AND PASSWD """
 
-authkeyexch = "2b01e212-c2be-4e88-9863-35cf3eb34d16"
-authpasswdexch = "7dac9f4e-9f50-4389-87c2-8cebc96a14bb"
+authkeyexch = ""
+authpasswdexch = ""
 
 # Go IBM X For Exchange and retrive your api key and password from https://exchange.xforce.ibmcloud.com/settings/api 
 
 """ VITOTAL APIKEY AND PASSWD """
 
-vtapikey = "6af5c7eed898ef035310059ae65cf09aba83eb68a40fd949fd0d3f67fd3ed0e8"
+vtapikey = ""
 
 # Go Virustotal and register for your free apikey. Retrive it from https://www.virustotal.com/gui/user/<yourusername>/apikey
 
