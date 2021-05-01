@@ -35,7 +35,7 @@ vtapikey = ""
 
 """ ABUSEIPDB APIKEY """
 
-abuseapikey = "273e9adf7fc4efd7b4a56b4f2cf7ffbf526f95fd5109cc66955bd0fe3beca800f4cb0c235d0d828a"
+abuseapikey = ""
 
 # Go AbuseipDB and retrieve your freeapikey from https://www.abuseipdb.com/account/api#   
 
