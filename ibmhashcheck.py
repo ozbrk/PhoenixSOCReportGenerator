@@ -1,3 +1,4 @@
+import sys
 class ibmhashcheck:
     def __init__(self, hashreportdata, ibmhash):
         self.hashreportdata = hashreportdata
@@ -11,7 +12,15 @@ class ibmhashcheck:
             hash_name = self.ibmhash
         except EnvironmentError:
             raise
-
+        try:
+            firstcheck = str(self.hashreportdata["malware"])
+        except KeyError:
+            print(" ")
+            print("[X-Force] Limited information is available. Use the contribution form or the comments option to share information about this observable, or add this report to a Collection.")
+            print(" ")
+            print("Information from X Force is not eligible. Please use another tool or conduct a manual search.")
+            print(" ")
+            sys.exit(0)
         try:
             hash_type = str(self.hashreportdata["malware"]["type"])
         except KeyError:

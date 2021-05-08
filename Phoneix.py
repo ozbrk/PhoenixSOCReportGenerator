@@ -22,20 +22,17 @@ from ibmhashcheck import ibmhashcheck
 
 """ IBM API KEY AND PASSWD """
 
-authkeyexch = ""
-authpasswdexch = ""
+with open("apicreds.json") as read_file:
+    cred = json.loads(read_file.read())
+
+authkeyexch = str(cred["authkeyexch"])
+authpasswdexch = str(cred["authpasswdexch"])
+vtapikey = str(cred["vtapikey"])
+abuseapikey = str(cred["abuseapikey"])
 
 # Go IBM X For Exchange and retrive your api key and password from https://exchange.xforce.ibmcloud.com/settings/api 
 
-""" VITOTAL APIKEY AND PASSWD """
-
-vtapikey = ""
-
 # Go Virustotal and register for your free apikey. Retrive it from https://www.virustotal.com/gui/user/<yourusername>/apikey
-
-""" ABUSEIPDB APIKEY """
-
-abuseapikey = ""
 
 # Go AbuseipDB and retrieve your freeapikey from https://www.abuseipdb.com/account/api#   
 
