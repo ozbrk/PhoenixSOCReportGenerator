@@ -5,14 +5,12 @@ Phoneix is a reporting tool mainly aiming for SOC analiysts to prepare quick rep
 ## Installation
 
 First step here - as very usual - cloning this script to your local machine by either using git clone or downloading it as a zip file. 
-Scripts will require some dependicies (again ass very usual) sadly I'm still learning the Git actions so you need to run the "dependencies.py" first.
+Scripts will require some dependicies (again as very usual) sadly I'm still learning the Git actions so you need to run the "dependencies.py" first.
 After the dependencies are installed, you need three api keys. 
 
 - IBM X-Force Exchange API (apikey and password)
 - Abuseipdb API
 - Virustotal Public API
-
-Open the phoneix.py with a text editor and paste your apikeys and passwords inside the " " commas. 
 
 authkeyexch is your IBM X Force Exchange API key
 authpasswdexch is your IBM X Force Exchange API password.
@@ -21,30 +19,8 @@ abuseapikey is your abuseipdb apikey.
 
 All of those keys can be obtained freely as they are all public api's. No commercial api functions are supported in this program. 
 
-```python
-# PUT YOUR APIKEYS HERE! ############################################################################################################
+In the old edition you were need to pass the keys directly into the code but now Dependencies.py makes it for you. Just run the dependencies.py and follow the instructions.
 
-""" IBM API KEY AND PASSWD """
-
-authkeyexch = ""
-authpasswdexch = ""
-
-# Go IBM X For Exchange and retrive your api key and password from https://exchange.xforce.ibmcloud.com/settings/api 
-
-""" VITOTAL APIKEY AND PASSWD """
-
-vtapikey = ""
-
-# Go Virustotal and register for your free apikey. Retrive it from https://www.virustotal.com/gui/user/<yourusername>/apikey
-
-""" ABUSEIPDB APIKEY """
-
-abuseapikey = ""
-
-# Go AbuseipDB and retrieve your freeapikey from https://www.abuseipdb.com/account/api#   
-
-#####################################################################################################################################
-```
 
 ## Usage
 
