@@ -7,7 +7,7 @@ print("Welcome to the Phoneix SOC Reporting and Quick Analysing Tool")
 print("Ozberk Akbas - 2021")
 
 print("Setup will have 3 stepps. In the first step you need to add your api keys as they are asked.")
-print("Next part of the setup process will be dependencies installation. There are roughly three major ones")
+print("Next part of the setup process will be dependencies installation.")
 print(" - Requests") 
 print(" - Termcolor")
 
