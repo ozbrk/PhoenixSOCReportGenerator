@@ -15,7 +15,7 @@ from abuseipdb import AbuseIPDB
 from ibmurl import xforceurlcheck
 from vthashcheck import virustotalhashcheck
 from ibmhashcheck import ibmhashcheck
-
+from vtipcheck import vtipcheck
 #####################################################################################################################################
 
 # PUT YOUR APIKEYS HERE! ############################################################################################################
@@ -48,6 +48,8 @@ parser.add_argument("-u", "--url", help="type desired url")
 parser.add_argument("-ex", "--exchange", help="Toogle IBM X-Force Exchange Check" , action="store_true")
 parser.add_argument("-vt", "--virustotal", help="Toogle Virus Total Check" , action="store_true")
 parser.add_argument("-ab", "--abuseipdb", help="Toogle Abuse IP DB Check" , action="store_true")
+parser.add_argument("-de", "--detailed", help="Toogle Detailed Analysis Check (Mainly for Virustotal)" , action="store_true")
+
 args = parser.parse_args()
 
 #####################################################################################################################################
@@ -96,8 +98,38 @@ if args.ipaddr != None:
 	else:
 		pass
 	if args.virustotal is True:
-		print("Virustotal IP Check is not supported yet. Please check wtih X Force and click the provided link.")
-		sys.exit(0)
+		allips_unlisted = args.ipaddr
+		allips = allips_unlisted.split(',')
+		for i in allips:
+				ip = i
+				vtheaders = {
+				'x-apikey':vtapikey
+				}
+				request = requests.get(f"https://www.virustotal.com/api/v3/ip_addresses/{ip}" , headers=vtheaders)
+				ipresult = json.loads(request.text)
+				vtresponse = json.dumps(ipresult , sort_keys=True , indent=2)
+				#print(type(vtresponse))
+				#print(vtresponse)
+				parsedresult = vtipcheck(ipresult)
+				parsedresult.virustotalipcheck()
+	if args.detailed is True:
+		allips_unlisted = args.ipaddr
+		allips = allips_unlisted.split(',')
+		for i in allips:
+				ip = i
+				vtheaders = {
+				'x-apikey':vtapikey
+				}
+				request = requests.get(f"https://www.virustotal.com/api/v3/ip_addresses/{ip}" , headers=vtheaders)
+				ipresult = json.loads(request.text)
+				vtresponse = json.dumps(ipresult , sort_keys=True , indent=2)
+				#print(type(vtresponse))
+				#print(vtresponse)
+				parsedresult = vtipcheck(ipresult)
+				parsedresult.virustotalipcheck()
+				parsedresult.virustotalipdetailedcheck()
+
+		
 	else:
 		pass
 else:

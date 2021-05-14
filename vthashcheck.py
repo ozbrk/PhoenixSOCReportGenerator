@@ -53,4 +53,3 @@ class virustotalhashcheck:
 
             print("-------------------")
             print(" ")
-

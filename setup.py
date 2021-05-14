@@ -24,7 +24,7 @@ if answer == "Yes":
 
     cred = {}
     cred["authkeyexch"] = authkeyexch
-    cred["aauthpasswdexch"] = authpasswdexch
+    cred["authpasswdexch"] = authpasswdexch
     cred["vtapikey"] = vtapikey
     cred["abuseapikey"] = abuseapikey
 
@@ -36,11 +36,14 @@ if answer == "Yes":
 
         subprocess.check_call([sys.executable, "-m", "pip", "install", "termcolor"])
         subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "tabulate"])
+
     
     except:
 
         subprocess.call('powershell.exe pip3 install requests', shell=True)
         subprocess.call('powershell.exe pip3 install termcolor', shell=True)
+        subprocess.call('powershell.exe pip3 install tabulate', shell=True)
 
     print("Installation Complete")
     x = input("Press Enter to Exit")
