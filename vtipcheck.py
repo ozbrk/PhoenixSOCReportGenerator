@@ -75,28 +75,23 @@ class vtipcheck:
         print(" ")
 
     def virustotalipdetailedcheck(self):
-        
+
         print("DETAILED ANALYSIS")   
-    
+        engine_names = []
+        results = []
+        engine_categorizations = []
         for value in self.ipresult["data"]["attributes"]["last_analysis_results"]:
-            f = []
-            f.append(value)
-            for i in f:
-                engine_name = i
-                result = str(self.ipresult["data"]["attributes"]["last_analysis_results"][i]["result"])
-                engine_categorization = str(self.ipresult["data"]["attributes"]["last_analysis_results"][i]["category"])
-            
-                print(" ----------------- ")      
-                print(f"Engine Name:" + " " + engine_name)
-                print(f"Result:" + " " + result)
-                if engine_categorization == "malicious":
-                    print(f"Category" + " " + engine_categorization)
-                    print(colored('Attention' , 'red'))
-                elif engine_categorization == "type-unsupported":
-                    print(f"Category" + " " + engine_categorization)
-                    print(colored('Not Supported!' , 'yellow'))
-                else:
-                    print(f"Category" + " " + engine_categorization)
-                print(" ----------------- ")
+            engine_names.append(value)
+        for engine_name in engine_names:
+            result = str(self.ipresult["data"]["attributes"]["last_analysis_results"][engine_name]["result"])
+            engine_categorization = str(self.ipresult["data"]["attributes"]["last_analysis_results"][engine_name]["category"])
+            engine_categorizations.append(engine_categorization)
+            results.append(result)
+
+        resulttable = zip(engine_names,results,engine_categorizations)
+        headers = ["Engine Name" , "Result" , "Categorization"]
+
+        print(tabulate(resulttable, headers=headers , tablefmt="grid"))
 
         
+
