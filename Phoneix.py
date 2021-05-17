@@ -59,6 +59,8 @@ args = parser.parse_args()
 # Those options simply gathers your apikey from above and make the http requests. Once they retrieve the json reponses, they pass them into the releaded objects to parsed and 
 # ready to be reported.
 
+# IP ADDRESS CHCECK #################################################################################################################
+
 if args.ipaddr != None:
 	if args.exchange is True:
 		allips_unlisted = args.ipaddr
@@ -107,7 +109,7 @@ if args.ipaddr != None:
 				}
 				request = requests.get(f"https://www.virustotal.com/api/v3/ip_addresses/{ip}" , headers=vtheaders)
 				ipresult = json.loads(request.text)
-				vtresponse = json.dumps(ipresult , sort_keys=True , indent=2)
+				vtresponse = json.dumps(ipresult , sort_keys=True , indent=4)
 				#print(type(vtresponse))
 				#print(vtresponse)
 				parsedresult = vtipcheck(ipresult)
@@ -126,7 +128,6 @@ if args.ipaddr != None:
 				#print(type(vtresponse))
 				#print(vtresponse)
 				parsedresult = vtipcheck(ipresult)
-				parsedresult.virustotalipcheck()
 				parsedresult.virustotalipdetailedcheck()
 
 		
@@ -134,6 +135,10 @@ if args.ipaddr != None:
 		pass
 else:
 	pass
+
+#####################################################################################################################################
+
+# URL CHCECK #################################################################################################################
 
 
 if args.url != None:
@@ -150,9 +155,12 @@ if args.url != None:
 			# print(json.dumps(urlwhois_data, indent=4))
 			urlresult = xforceurlcheck(urlreport_data, urlwhois_data, url)
 			urlresult.urlreporter()
-			
 	else:
 		pass
+
+#####################################################################################################################################
+
+# FİLE HASH CHCECK #################################################################################################################
 
 if args.filehash != None:
 	if args.virustotal is True:
@@ -174,6 +182,26 @@ if args.filehash != None:
 			except KeyError:
 				vtscanresult = virustotalhashcheck(vtresult, hashval)
 				vtscanresult.virustotalhashchecker()
+	if args.detailed is True:
+		allhash_unlisted = args.filehash
+		allhashes = allhash_unlisted.split(',')
+		for i in allhashes:
+			hashval = i 
+			vtmain = "https://www.virustotal.com/api/v3/files/"
+			vtheaders = {
+				'x-apikey':vtapikey
+			}
+			vtmainrequest = requests.get(vtmain + hashval , headers=vtheaders)
+			vtresult = json.loads(vtmainrequest.text)
+			try:
+				errcode = vtresult["error"]["code"]
+				print("ERROR:" + " " + errcode)
+				print("Check With:" + " " + "https://www.virustotal.com/gui/search/" + hashval)
+				sys.exit(0)
+			except KeyError:
+				vtscanresult = virustotalhashcheck(vtresult, hashval)
+				#vtscanresult.virustotalhashchecker()
+				vtscanresult.virustotalhashcheckerdetailed()	
 	else:
 		pass
 	if args.exchange is True:
@@ -190,3 +218,6 @@ if args.filehash != None:
 	if args.abuseipdb is True:
 		print("This operation is not supported by abuseipdb. Please type -h to gather more information.")
 		sys.exit(0)
+
+#####################################################################################################################################
+

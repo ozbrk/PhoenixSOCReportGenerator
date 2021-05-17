@@ -59,6 +59,7 @@ class vtipcheck:
 
         print(" ")
         print("MAIN REPORT")
+        print("-----------------------------------------------")
         print(f"Regional Internet Registry:" + " " + registry)
         print(f"Jarm:" + " " + jarm)
         print(f"Network" + " " + subnetmask)
@@ -66,17 +67,24 @@ class vtipcheck:
         print(f"Owner:" + " " + owner)
         print(f"Virus Total Reputation Score:" + " " + reputation)
         print(" ")
-        print("OVERALL ANALYSİS REPORT")        
+        print("OVERALL ANALYSİS REPORT") 
+        print("-----------------------------------------------")       
         print(f"Harmless:" + " " + hrmlss)
         print(f"Malicious:" + " " + mal)
         print(f"Suspicious:" + " " + suspicious)
         print(f"Undetected:" + " " + undetected)
         print(f"Timeout:" + " " + timeout)
+        print("-----------------------------------------------")
+        print(" ")
+        print(f"WHOIS DATA:")
+        print("-----------------------------------------------")
+        print(whois)
+        print("-----------------------------------------------")
         print(" ")
 
     def virustotalipdetailedcheck(self):
 
-        print("DETAILED ANALYSIS")   
+        print("ENGINE RESULTS:")   
         engine_names = []
         results = []
         engine_categorizations = []
@@ -94,4 +102,3 @@ class vtipcheck:
         print(tabulate(resulttable, headers=headers , tablefmt="grid"))
 
         
-
