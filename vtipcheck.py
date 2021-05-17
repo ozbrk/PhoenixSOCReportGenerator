@@ -10,51 +10,51 @@ class vtipcheck:
     def virustotalipcheck(self):
         try:
             registry = self.ipresult["data"]["attributes"]["regional_internet_registry"]
-        except:
-            pass
+        except KeyError:
+            registry = "N/A"
         try:
             jarm = str(self.ipresult["data"]["attributes"]["jarm"])
-        except:
+        except KeyError:
             jarm = "N/A"    
         try:
             subnetmask = str(self.ipresult["data"]["attributes"]["network"])
-        except:
+        except KeyError:
             subnetmask = "N/A"
         try:
             nation = str(self.ipresult["data"]["attributes"]["country"])
-        except:
-            nation: "N/A"
+        except KeyError:
+            nation = "N/A"
         try:
             owner = str(self.ipresult["data"]["attributes"]["as_owner"])
-        except: 
+        except KeyError: 
             owner = "N/A"
         try:
             hrmlss = str(self.ipresult["data"]["attributes"]["last_analysis_stats"]["harmless"])
-        except:
+        except KeyError:
             hrmlss = "0"
         try:
             mal = str(self.ipresult["data"]["attributes"]["last_analysis_stats"]["malicious"])
-        except:
+        except KeyError:
             mal = "0"
         try:
             suspicious = str(self.ipresult["data"]["attributes"]["last_analysis_stats"]["suspicious"])
-        except:
+        except KeyError:
             suspicious = "0"
         try:
             undetected = str(self.ipresult["data"]["attributes"]["last_analysis_stats"]["undetected"])
-        except:
+        except KeyError:
             undetected = "0"
         try:
             timeout = str(self.ipresult["data"]["attributes"]["last_analysis_stats"]["timeout"])
-        except:
+        except KeyError: 
             timeout = "0"
         try:
             reputation = str(self.ipresult["data"]["attributes"]["reputation"])
-        except:
+        except KeyError:
             reputation = "N/A"
         try:
             whois = str(self.ipresult["data"]["attributes"]["whois"])
-        except:
+        except KeyError:
             whois = "No Data"
 
         print(" ")
@@ -62,8 +62,8 @@ class vtipcheck:
         print("-----------------------------------------------")
         print(f"Regional Internet Registry:" + " " + registry)
         print(f"Jarm:" + " " + jarm)
-        print(f"Network" + " " + subnetmask)
-        print(f"Counrty" + " " + nation)
+        print(f"Network:" + " " + subnetmask)
+        print(f"Counrty:" + " " + nation)
         print(f"Owner:" + " " + owner)
         print(f"Virus Total Reputation Score:" + " " + reputation)
         print(" ")
@@ -102,3 +102,4 @@ class vtipcheck:
         print(tabulate(resulttable, headers=headers , tablefmt="grid"))
 
         
+
