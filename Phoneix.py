@@ -4,23 +4,33 @@
 ## The results will printed out as a report when everything is done and finished.
 
 # IMPORTS ##########################################################################################################################
+try:
+	import sys
+	import argparse
+	import requests
+	import json
+	sys.path.append(".")
+	from ibmip import reputationtool
+	from abuseipdb import AbuseIPDB
+	from ibmurl import xforceurlcheck
+	from vthashcheck import virustotalhashcheck
+	from ibmhashcheck import ibmhashcheck
+	from vtipcheck import vtipcheck
+except:
+	print("""[ERR] Dependencies haven't met! Run the setup.py first with the following command: "python3 setup.py" """)
+	sys.exit(0)
 
-import sys
-import argparse
-import requests
-import json
-sys.path.append(".")
-from ibmip import reputationtool
-from abuseipdb import AbuseIPDB
-from ibmurl import xforceurlcheck
-from vthashcheck import virustotalhashcheck
-from ibmhashcheck import ibmhashcheck
-from vtipcheck import vtipcheck
 #####################################################################################################################################
 
 # PUT YOUR APIKEYS HERE! ############################################################################################################
 
 """ IBM API KEY AND PASSWD """
+try:
+	with open("apicreds.json") as read_file:
+		cred = json.loads(read_file.read())
+except:
+	print("""[ERR] Credentials haven't provided! Run the setup.py first with the following command: "python3 setup.py" """)
+	sys.exit(0)
 
 with open("apicreds.json") as read_file:
     cred = json.loads(read_file.read())
