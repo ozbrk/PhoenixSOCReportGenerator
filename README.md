@@ -27,7 +27,7 @@ In the old edition you were need to pass the keys directly into the code but now
 General syntax of the script is as follows:
 
 ```bash
-usage: main.py [-h] [-f filehash] [-ip ip] [-u URL] [-ex] [-vt] [-ab]
+usage: python3 Phoneix.py [-h] [-f filehash] [-ip ip] [-u URL] [-ex] [-vt] [-ab]
 
 optional arguments:
   -h, --help            show this help message and exit
