@@ -4,21 +4,21 @@
 ## The results will printed out as a report when everything is done and finished.
 
 # IMPORTS ##########################################################################################################################
-try:
-	import sys
-	import argparse
-	import requests
-	import json
-	sys.path.append(".")
-	from ibmip import reputationtool
-	from abuseipdb import AbuseIPDB
-	from ibmurl import xforceurlcheck
-	from vthashcheck import virustotalhashcheck
-	from ibmhashcheck import ibmhashcheck
-	from vtipcheck import vtipcheck
-except:
-	print("""[ERR] Dependencies haven't met! Run the setup.py first with the following command: "python3 setup.py" """)
-	sys.exit(0)
+# try:
+import sys
+import argparse
+import requests
+import json
+sys.path.append(".")
+from ibmip import reputationtool
+from abuseipdb import AbuseIPDB
+from vthashcheck import virustotalhashcheck
+from ibmhashcheck import ibmhashcheck
+from vtipcheck import vtipcheck
+from ibmurl import xforceurlcheck
+# except:
+# 	print("""[ERR] Dependencies haven't met! Run the setup.py first with the following command: "python3 setup.py" """)
+# 	sys.exit(0)
 
 #####################################################################################################################################
 
@@ -40,11 +40,11 @@ authpasswdexch = str(cred["authpasswdexch"])
 vtapikey = str(cred["vtapikey"])
 abuseapikey = str(cred["abuseapikey"])
 
-# Go IBM X For Exchange and retrive your api key and password from https://exchange.xforce.ibmcloud.com/settings/api 
+# Go IBM X For Exchange and retrive your api key and password from https://exchange.xforce.ibmcloud.com/settings/api
 
 # Go Virustotal and register for your free apikey. Retrive it from https://www.virustotal.com/gui/user/<yourusername>/apikey
 
-# Go AbuseipDB and retrieve your freeapikey from https://www.abuseipdb.com/account/api#   
+# Go AbuseipDB and retrieve your freeapikey from https://www.abuseipdb.com/account/api#
 
 #####################################################################################################################################
 
@@ -66,7 +66,7 @@ args = parser.parse_args()
 
 # If Else Statements For Command Line Options #######################################################################################
 
-# Those options simply gathers your apikey from above and make the http requests. Once they retrieve the json reponses, they pass them into the releaded objects to parsed and 
+# Those options simply gathers your apikey from above and make the http requests. Once they retrieve the json reponses, they pass them into the releaded objects to parsed and
 # ready to be reported.
 
 # IP ADDRESS CHCECK #################################################################################################################
@@ -76,11 +76,11 @@ if args.ipaddr != None:
 		allips_unlisted = args.ipaddr
 		allips = allips_unlisted.split(',')
 		for i in allips:
-			ip = i 
-			request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'}) 
+			ip = i
+			request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
 			whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
 			report_data = json.loads(request.text)
-			whois_data = json.loads(whois.text) 
+			whois_data = json.loads(whois.text)
 			result = reputationtool(ip, report_data, whois_data)
 			result.IBMIPReputation()
 	else:
@@ -90,23 +90,26 @@ if args.ipaddr != None:
 		allips = allips_unlisted.split(',')
 		for i in allips:
 			abusemainurl = "https://api.abuseipdb.com/api/v2/check"
-			age = int("180")
+			age = int("100")
 			querystring = {
     		'ipAddress': i,
     		'maxAgeInDays': age,
+			"verbose": True
 			}
 			headers = {
     		'Accept': 'application/json',
-    		'Key':  abuseapikey
+    		'Key':  abuseapikey,
 			}
+			# verbose = "verbose"
+
 			responseabuseip = requests.request(method='GET', url=abusemainurl, headers=headers, params=querystring)
+			# print(responseabuseip)
 			decodedResponse = json.loads(responseabuseip.text)
 			abuseipdbresponse = json.dumps(decodedResponse, sort_keys=True, indent=4)
-			# print(decodedResponse)
+			# print(abuseipdbresponse)
 			# print(type(decodedResponse))
 			abuseresult = AbuseIPDB(decodedResponse, i)
 			abuseresult.abuseipreputation()
-			
 	else:
 		pass
 	if args.virustotal is True:
@@ -140,7 +143,7 @@ if args.ipaddr != None:
 				parsedresult = vtipcheck(ipresult)
 				parsedresult.virustotalipdetailedcheck()
 
-		
+
 	else:
 		pass
 else:
@@ -156,11 +159,11 @@ if args.url != None:
 		allurls_unlisted = args.url
 		allurls = allurls_unlisted.split(',')
 		for m in allurls:
-			url = m 
-			urlrequest = requests.get("https://api.xforce.ibmcloud.com/url/" + url , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'}) 
+			url = m
+			urlrequest = requests.get("https://api.xforce.ibmcloud.com/url/" + url , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
 			urlwhois = requests.get("https://api.xforce.ibmcloud.com/whois/" + url ,  auth=(authkeyexch , authpasswdexch))
 			urlreport_data = json.loads(urlrequest.text)
-			urlwhois_data = json.loads(urlwhois.text) 
+			urlwhois_data = json.loads(urlwhois.text)
 			#print(json.dumps(urlreport_data, indent=4))
 			# print(json.dumps(urlwhois_data, indent=4))
 			urlresult = xforceurlcheck(urlreport_data, urlwhois_data, url)
@@ -177,7 +180,7 @@ if args.filehash != None:
 		allhash_unlisted = args.filehash
 		allhashes = allhash_unlisted.split(',')
 		for i in allhashes:
-			hashval = i 
+			hashval = i
 			vtmain = "https://www.virustotal.com/api/v3/files/"
 			vtheaders = {
 				'x-apikey':vtapikey
@@ -196,7 +199,7 @@ if args.filehash != None:
 		allhash_unlisted = args.filehash
 		allhashes = allhash_unlisted.split(',')
 		for i in allhashes:
-			hashval = i 
+			hashval = i
 			vtmain = "https://www.virustotal.com/api/v3/files/"
 			vtheaders = {
 				'x-apikey':vtapikey
@@ -211,15 +214,15 @@ if args.filehash != None:
 			except KeyError:
 				vtscanresult = virustotalhashcheck(vtresult, hashval)
 				#vtscanresult.virustotalhashchecker()
-				vtscanresult.virustotalhashcheckerdetailed()	
+				vtscanresult.virustotalhashcheckerdetailed()
 	else:
 		pass
 	if args.exchange is True:
 		allhashibm_unlisted = args.filehash
 		allhashesibm = allhashibm_unlisted.split(',')
 		for i in allhashesibm:
-			ibmhash = i 
-			hashrequest = requests.get("https://api.xforce.ibmcloud.com/malware/" + ibmhash , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'}) 
+			ibmhash = i
+			hashrequest = requests.get("https://api.xforce.ibmcloud.com/malware/" + ibmhash , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
 			hashreportdata = json.loads(hashrequest.text)
 			hashresult = ibmhashcheck(hashreportdata, ibmhash)
 			hashresult.generatehashreport()
@@ -230,4 +233,3 @@ if args.filehash != None:
 		sys.exit(0)
 
 #####################################################################################################################################
-

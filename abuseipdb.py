@@ -24,11 +24,53 @@ class AbuseIPDB:
             country = str(self.decodedResponse["data"]["countryCode"])
         except KeyError:
             country = "N/A"
-        print(" ")        
-        print(f"IP Report For" + " " + ip_string)
-        print(f"Abuse IP DB Score:" + ip_confidence)
-        print(f"ISP:" + " " + isp)
-        print(f"Country:" + " " + country )
-        print("Reports: Reports cannot be provided by the current version of this script please visit the following url https://www.abuseipdb.com/check/" + self.ip )
-        print(" ")
-     
+
+        z = " "
+        try:
+            self.decodedResponse["data"]["reports"]
+            z = 1
+        except:
+            z = 0
+
+        if z == 1:
+            allcomments=[]
+            comments=[]
+            countries=[]
+            origincountries=[]
+            reportdates=[]
+
+            for i in self.decodedResponse["data"]["reports"]:
+                allcomments.append(i)
+            for x in allcomments:
+                reportdate= x["reportedAt"]
+                comment = x["comment"]
+                country = x["reporterCountryCode"]
+                origincountry = x["reporterCountryName"]
+                comments.append(comment)
+                countries.append(country)
+                origincountries.append(origincountry)
+                reportdates.append(reportdate)
+            reportset = zip(comments , reportdates , countries , origincountries)
+            print(" ")
+            print(f"IP Report For" + " " + ip_string)
+            print(f"Abuse IP DB Score:" + ip_confidence)
+            print(f"ISP:" + " " + isp)
+            print(f"Country:" + " " + country )
+            print(" ")
+            print(f"Commnets:")
+            print(" ")
+            for m , n , l , v in reportset:
+                print(f"Comment: " + m)
+                print(f"Date: " + n)
+                print(f"Country:"  + l)
+                print(f"Reported From: " + v)
+                print(" ")
+            print(" ")
+        else:
+            print(" ")
+            print(f"IP Report For" + " " + ip_string)
+            print(f"Abuse IP DB Score:" + ip_confidence)
+            print(f"ISP:" + " " + isp)
+            print(f"Country:" + " " + country )
+            print(" ")
+            print(f"Commnets: No Comment Recieved!")
