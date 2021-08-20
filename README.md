@@ -1,4 +1,4 @@
-# Phoneix Reporting Tool for SOC Analysts
+# Phoenix Reporting Tool for SOC Analysts
 
 Phoneix is a reporting tool mainly aiming for SOC analiysts to prepare quick reports for their customers.
 
