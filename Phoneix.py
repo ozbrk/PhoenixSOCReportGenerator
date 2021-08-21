@@ -92,13 +92,13 @@ if args.ipaddr != None:
 			abusemainurl = "https://api.abuseipdb.com/api/v2/check"
 			age = int("100")
 			querystring = {
-    		'ipAddress': i,
-    		'maxAgeInDays': age,
+    			'ipAddress': i,
+    			'maxAgeInDays': age,
 			"verbose": True
 			}
 			headers = {
-    		'Accept': 'application/json',
-    		'Key':  abuseapikey,
+    			'Accept': 'application/json',
+    			'Key':  abuseapikey,
 			}
 			# verbose = "verbose"
 
