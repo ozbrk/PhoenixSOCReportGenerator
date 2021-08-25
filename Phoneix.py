@@ -59,6 +59,7 @@ parser.add_argument("-ex", "--exchange", help="Toogle IBM X-Force Exchange Check
 parser.add_argument("-vt", "--virustotal", help="Toogle Virus Total Check" , action="store_true")
 parser.add_argument("-ab", "--abuseipdb", help="Toogle Abuse IP DB Check" , action="store_true")
 parser.add_argument("-de", "--detailed", help="Toogle Detailed Analysis Check (Mainly for Virustotal)" , action="store_true")
+parser.add_argument("-exp", "--export", help="Toogle Export Mode[ONLY FOR X-FORCE]" , action="store_true")
 
 args = parser.parse_args()
 
@@ -73,16 +74,29 @@ args = parser.parse_args()
 
 if args.ipaddr != None:
 	if args.exchange is True:
-		allips_unlisted = args.ipaddr
-		allips = allips_unlisted.split(',')
-		for i in allips:
-			ip = i
-			request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
-			whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
-			report_data = json.loads(request.text)
-			whois_data = json.loads(whois.text)
-			result = reputationtool(ip, report_data, whois_data)
-			result.IBMIPReputation()
+		if args.export is False:
+			allips_unlisted = args.ipaddr
+			allips = allips_unlisted.split(',')
+			for i in allips:
+				ip = i
+				request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
+				whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
+				report_data = json.loads(request.text)
+				whois_data = json.loads(whois.text)
+				result = reputationtool(ip, report_data, whois_data)
+				result.IBMIPReputation()
+		else:
+			allips_unlisted = args.ipaddr
+			allips = allips_unlisted.split(',')
+			for i in allips:
+				ip = i
+				request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
+				whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
+				report_data = json.loads(request.text)
+				whois_data = json.loads(whois.text)
+				result = reputationtool(ip, report_data, whois_data)
+				result.IBMReputationExport()
+			
 	else:
 		pass
 	if args.abuseipdb is True:
