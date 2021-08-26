@@ -60,11 +60,22 @@ class AbuseIPDB:
             print(f"Commnets:")
             print(" ")
             for m , n , l , v in reportset:
-                print(f"Comment: " + m)
-                print(f"Date: " + n)
-                print(f"Country:"  + l)
-                print(f"Reported From: " + v)
-                print(" ")
+                try:
+                    print(f"Comment: " + m)
+                except:
+                    print("Comment: N/A")
+                try:
+                    print(f"Date: " + n)
+                except:
+                    print("Date: N/A")
+                try:
+                    print(f"Country: " + l)
+                except:
+                    print("Country: N/A")
+                try:    
+                    print(f"Reported From: " + v)
+                except:    
+                    print("Reported From: N/A")
             print(" ")
         else:
             print(" ")
