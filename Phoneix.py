@@ -2,7 +2,7 @@
 ## 02.04.2020
 ## The program intended to analyze the given IP adress, hash value, file or file name given by user with IBM X-Force Exchange, Virus Total and Abuse IP DB
 ## The results will printed out as a report when everything is done and finished.
-
+# Test Comment
 # IMPORTS ##########################################################################################################################
 # try:
 import sys
