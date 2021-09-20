@@ -7,6 +7,6 @@ Current features are follows:
 | :---        |    :---   |        :--- | :--- |				
 | AbuseIP      | OK       | Possible but not supported   | Not supported by the application |
 | X-Force Exchange      | OK  | OK  | OK |
-| Virus Total      | OK       | Under Development   | OK |
+| Virus Total      | OK       | OK   | OK |
 
 
