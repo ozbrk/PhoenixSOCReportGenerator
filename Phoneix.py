@@ -9,6 +9,8 @@ import sys
 import argparse
 import requests
 import json
+import re
+import time
 sys.path.append(".")
 from ibmip import reputationtool
 from abuseipdb import AbuseIPDB
@@ -16,6 +18,8 @@ from vthashcheck import virustotalhashcheck
 from ibmhashcheck import ibmhashcheck
 from vtipcheck import vtipcheck
 from ibmurl import xforceurlcheck
+from vturlcheck import virustotalurlcheck
+
 # except:
 # 	print("""[ERR] Dependencies haven't met! Run the setup.py first with the following command: "python3 setup.py" """)
 # 	sys.exit(0)
@@ -47,6 +51,22 @@ abuseapikey = str(cred["abuseapikey"])
 # Go AbuseipDB and retrieve your freeapikey from https://www.abuseipdb.com/account/api#
 
 #####################################################################################################################################
+
+
+# INTERNAL FUNCTIONS ################################################################################################################
+
+# urlcheckadapter function have created for performing a loop against the "queued" response code 
+def virustotalurlcheckadapter(resultid, vtheaders):
+	analysisrequest = requests.get(f"https://www.virustotal.com/api/v3/analyses/{resultid}", headers=vtheaders)
+	analysisresult = analysisrequest.json()
+	if analysisresult["data"]["attributes"]["status"] == "queued":
+		print("Status is in a queue. The script will retry in 5 seconds.")
+		time.sleep(5)
+		virustotalurlcheckadapter(resultid, vtheaders)
+	else:
+		resultprocess = virustotalurlcheck(analysisresult)
+		resultprocess.vturlcheck()
+
 
 # Command Line Parser ###############################################################################################################
 
@@ -154,6 +174,7 @@ else:
 # URL CHCECK #################################################################################################################
 
 
+
 if args.url != None:
 	if args.exchange is True:
 		allurls_unlisted = args.url
@@ -170,6 +191,25 @@ if args.url != None:
 			urlresult.urlreporter()
 	else:
 		pass
+	
+	if args.virustotal is True:
+			allurls_unlisted = args.url
+			allurls = allurls_unlisted.split(',')
+			for i in allurls:
+				url = i
+				vtheaders = {
+					'x-apikey': vtapikey,
+				}
+				data = {
+					'url': url
+				}
+				request = requests.post(f"https://www.virustotal.com/api/v3/urls", headers=vtheaders , data=data)
+				urlresult = request.json()
+				try:
+					errcode = urlresult["error"]["code"]
+				except:
+					resultid = urlresult["data"]["id"]
+					virustotalurlcheckadapter(resultid, vtheaders)		
 
 #####################################################################################################################################
 
