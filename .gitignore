@@ -1,0 +1,4 @@
+#Gitignore File for the universal changes 
+
+__pycache__/
+/credentials.json
