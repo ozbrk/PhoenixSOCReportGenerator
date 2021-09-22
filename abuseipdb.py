@@ -25,14 +25,7 @@ class AbuseIPDB:
         except KeyError:
             country = "N/A"
 
-        z = " "
         try:
-            self.decodedResponse["data"]["reports"]
-            z = 1
-        except:
-            z = 0
-
-        if z == 1:
             allcomments=[]
             comments=[]
             countries=[]
@@ -60,6 +53,7 @@ class AbuseIPDB:
             print(f"Commnets:")
             print(" ")
             for m , n , l , v in reportset:
+                print("-----------------------------")
                 try:
                     print(f"Comment: " + m)
                 except:
@@ -76,8 +70,8 @@ class AbuseIPDB:
                     print(f"Reported From: " + v)
                 except:    
                     print("Reported From: N/A")
-            print(" ")
-        else:
+                print("-----------------------------")
+        except:
             print(" ")
             print(f"IP Report For" + " " + ip_string)
             print(f"Abuse IP DB Score:" + ip_confidence)
