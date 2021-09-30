@@ -51,8 +51,4 @@ class virustotalurlcheck:
             engine_table.add_row("Category" , category)
             engine_table.add_row("Result" , result)
             engine_table.add_row("Method" , method)
-<<<<<<< HEAD
             console.print(engine_table)
-=======
-            console.print(engine_table)
->>>>>>> 0514b373185f80d7e36b48c704edd4c2d33309f5

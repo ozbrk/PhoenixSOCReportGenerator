@@ -33,8 +33,7 @@ try:
 	with open("apicreds.json") as read_file:
 		cred = json.loads(read_file.read())
 except:
-	print("""[ERR] Credentials haven't provided! Run the setup.py first with the following command: "python3 setup.py" """)
-	sys.exit(0)
+    raise
 
 with open("apicreds.json") as read_file:
     cred = json.loads(read_file.read())
