@@ -2,13 +2,15 @@
 ## 02.04.2020
 ## The program intended to analyze the given IP adress, hash value, file or file name given by user with IBM X-Force Exchange, Virus Total and Abuse IP DB
 ## The results will printed out as a report when everything is done and finished.
-# Test Comment
+
 # IMPORTS ##########################################################################################################################
 # try:
 import sys
 import argparse
 import requests
 import json
+import re
+import time
 sys.path.append(".")
 from ibmip import reputationtool
 from abuseipdb import AbuseIPDB
@@ -16,6 +18,8 @@ from vthashcheck import virustotalhashcheck
 from ibmhashcheck import ibmhashcheck
 from vtipcheck import vtipcheck
 from ibmurl import xforceurlcheck
+from vturlcheck import virustotalurlcheck
+
 # except:
 # 	print("""[ERR] Dependencies haven't met! Run the setup.py first with the following command: "python3 setup.py" """)
 # 	sys.exit(0)
@@ -48,6 +52,22 @@ abuseapikey = str(cred["abuseapikey"])
 
 #####################################################################################################################################
 
+
+# INTERNAL FUNCTIONS ################################################################################################################
+
+# urlcheckadapter function have created for performing a loop against the "queued" response code 
+def virustotalurlcheckadapter(resultid, vtheaders):
+	analysisrequest = requests.get(f"https://www.virustotal.com/api/v3/analyses/{resultid}", headers=vtheaders)
+	analysisresult = analysisrequest.json()
+	if analysisresult["data"]["attributes"]["status"] == "queued":
+		print("Status is in a queue. The script will retry in 5 seconds.")
+		time.sleep(5)
+		virustotalurlcheckadapter(resultid, vtheaders)
+	else:
+		resultprocess = virustotalurlcheck(analysisresult)
+		resultprocess.vturlcheck()
+
+
 # Command Line Parser ###############################################################################################################
 
 
@@ -59,7 +79,6 @@ parser.add_argument("-ex", "--exchange", help="Toogle IBM X-Force Exchange Check
 parser.add_argument("-vt", "--virustotal", help="Toogle Virus Total Check" , action="store_true")
 parser.add_argument("-ab", "--abuseipdb", help="Toogle Abuse IP DB Check" , action="store_true")
 parser.add_argument("-de", "--detailed", help="Toogle Detailed Analysis Check (Mainly for Virustotal)" , action="store_true")
-parser.add_argument("-exp", "--export", help="Toogle Export Mode[ONLY FOR X-FORCE]" , action="store_true")
 
 args = parser.parse_args()
 
@@ -74,29 +93,16 @@ args = parser.parse_args()
 
 if args.ipaddr != None:
 	if args.exchange is True:
-		if args.export is False:
-			allips_unlisted = args.ipaddr
-			allips = allips_unlisted.split(',')
-			for i in allips:
-				ip = i
-				request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
-				whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
-				report_data = json.loads(request.text)
-				whois_data = json.loads(whois.text)
-				result = reputationtool(ip, report_data, whois_data)
-				result.IBMIPReputation()
-		else:
-			allips_unlisted = args.ipaddr
-			allips = allips_unlisted.split(',')
-			for i in allips:
-				ip = i
-				request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
-				whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
-				report_data = json.loads(request.text)
-				whois_data = json.loads(whois.text)
-				result = reputationtool(ip, report_data, whois_data)
-				result.IBMReputationExport()
-			
+		allips_unlisted = args.ipaddr
+		allips = allips_unlisted.split(',')
+		for i in allips:
+			ip = i
+			request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
+			whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
+			report_data = json.loads(request.text)
+			whois_data = json.loads(whois.text)
+			result = reputationtool(ip, report_data, whois_data)
+			result.IBMIPReputation()
 	else:
 		pass
 	if args.abuseipdb is True:
@@ -168,6 +174,7 @@ else:
 # URL CHCECK #################################################################################################################
 
 
+
 if args.url != None:
 	if args.exchange is True:
 		allurls_unlisted = args.url
@@ -184,6 +191,25 @@ if args.url != None:
 			urlresult.urlreporter()
 	else:
 		pass
+	
+	if args.virustotal is True:
+			allurls_unlisted = args.url
+			allurls = allurls_unlisted.split(',')
+			for i in allurls:
+				url = i
+				vtheaders = {
+					'x-apikey': vtapikey,
+				}
+				data = {
+					'url': url
+				}
+				request = requests.post(f"https://www.virustotal.com/api/v3/urls", headers=vtheaders , data=data)
+				urlresult = request.json()
+				try:
+					errcode = urlresult["error"]["code"]
+				except:
+					resultid = urlresult["data"]["id"]
+					virustotalurlcheckadapter(resultid, vtheaders)		
 
 #####################################################################################################################################
 
@@ -245,5 +271,3 @@ if args.filehash != None:
 	if args.abuseipdb is True:
 		print("This operation is not supported by abuseipdb. Please type -h to gather more information.")
 		sys.exit(0)
-
-#####################################################################################################################################
