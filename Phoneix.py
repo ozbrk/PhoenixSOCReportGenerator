@@ -100,6 +100,50 @@ args = parser.parse_args()
 
 # IP ADDRESS CHCECK #################################################################################################################
 
+
+if args.fileread is True:
+	args.ipaddr = " "
+	files = os.listdir("./Bulkoperations")
+	ipaddr = []
+	print("""Bulkoperations: This operation will help you to get reputation of ip's that inside of a file. 
+Operation supports the csv and txt files. Txt files must only contains the IP addresses line-by-line. A headerless csv won't be readed. If you have multiple headers (like if you want to select a spessific column from a multi-columned .csv) you will be asked to provide. 
+	""")
+	for i,v in enumerate(files):
+		print(i , v)
+	selected = files[int(input("Selectfile(number):"))]
+	fileextention = pathlib.Path("./Bulkoperations/" + selected).suffix
+	if fileextention == ".txt":
+		with open("./Bulkoperations/" + selected , "r") as r:
+			lines = r.readlines()
+			for i in lines:
+				i.strip()
+				ipaddr.append(i)
+			for i in ipaddr:
+				ip = i.strip()
+				print(i)
+				request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
+				whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
+				report_data = json.loads(request.text)
+				whois_data = json.loads(whois.text)
+				result = reputationtool(ip, report_data, whois_data)
+				result.IBMReputationExport()
+			print("Operation Completed")
+	if fileextention == ".csv":
+		header = input("Header: ")
+		if header == None:
+			raise Exception("You must provide a header name. If it is empty, convert it to a text file and use it that way.")
+		else:
+			file = pd.read_csv("./Bulkoperations/" + selected)
+			selectcolm = file[header]
+			for i in selectcolm:
+				ip = i
+				request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
+				whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
+				report_data = json.loads(request.text)
+				whois_data = json.loads(whois.text)
+				result = reputationtool(ip, report_data, whois_data)
+				result.IBMReputationExport()
+
 if args.ipaddr != None:
 	if args.exchange is True:
 		if args.export is True:
@@ -114,46 +158,6 @@ if args.ipaddr != None:
 				result = reputationtool(ip, report_data, whois_data)
 				result.IBMReputationExport()
 
-		elif args.fileread is True:
-			files = os.listdir("./Bulkoperations")
-			ipaddr = []
-			print("""Bulkoperations: This operation will help you to get reputation of ip's that inside of a file. 
-Operation supports the csv and txt files. Txt files must only contains the IP addresses line-by-line. A headerless csv won't be readed. If you have multiple headers (like if you want to select a spessific column from a multi-columned .csv) you will be asked to provide. 
-			""")
-			for i,v in enumerate(files):
-				print(i , v)
-			selected = files[int(input("Selectfile(number):"))]
-			fileextention = pathlib.Path("./Bulkoperations/" + selected).suffix
-			if fileextention == ".txt":
-				with open("./Bulkoperations/" + selected , "r") as r:
-					lines = r.readlines()
-					for i in lines:
-						i.strip("\n")
-						ipaddr.append(i)
-					for i in ipaddr:
-						ip = i
-						request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
-						whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
-						report_data = json.loads(request.text)
-						whois_data = json.loads(whois.text)
-						result = reputationtool(ip, report_data, whois_data)
-						result.IBMReputationExport()
-					print("Operation Completed")
-			if fileextention == ".csv":
-				header = input("Header: ")
-				if header == None:
-					raise Exception("You must provide a header name. If it is empty, convert it to a text file and use it that way.")
-				else:
-					file = pd.read_csv("./Bulkoperations/" + selected)
-					selectcolm = file[header]
-					for i in selectcolm:
-						ip = i
-						request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
-						whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
-						report_data = json.loads(request.text)
-						whois_data = json.loads(whois.text)
-						result = reputationtool(ip, report_data, whois_data)
-						result.IBMReputationExport()
 
 		else:
 			allips_unlisted = args.ipaddr
