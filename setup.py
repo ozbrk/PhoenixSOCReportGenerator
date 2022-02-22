@@ -48,6 +48,8 @@ if answer.lower() == "y":
         subprocess.call('powershell.exe pip3 install termcolor', shell=True)
         subprocess.call('powershell.exe pip3 install tabulate', shell=True)
         subprocess.call('powershell.exe pip3 install rich', shell=True)
+
+        
     print("Installation Complete")
     x = input("Press Enter to Exit")
 

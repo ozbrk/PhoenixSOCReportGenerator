@@ -101,5 +101,6 @@ class vtipcheck:
 
         print(tabulate(resulttable, headers=headers , tablefmt="grid"))
 
-        
+    def virustotalipcomments(self):
+        com = 2 #placeholder. This part of the code is underconstruction 
 

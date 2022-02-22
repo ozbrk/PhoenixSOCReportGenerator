@@ -5,6 +5,11 @@
 # Test Comment
 # IMPORTS ##########################################################################################################################
 # try:
+from __future__ import print_function
+import csv
+from email.header import Header
+import enum
+from genericpath import exists
 import sys
 import argparse
 import requests
@@ -17,8 +22,11 @@ from abuseipdb import AbuseIPDB
 from vthashcheck import virustotalhashcheck
 from ibmhashcheck import ibmhashcheck
 from vtipcheck import vtipcheck
-from ibmurl import xforceurlcheck
+from ibmurl import *
 from vturlcheck import virustotalurlcheck
+import os 
+import pathlib
+import pandas as pd
 
 # except:
 # 	print("""[ERR] Dependencies haven't met! Run the setup.py first with the following command: "python3 setup.py" """)
@@ -76,6 +84,8 @@ parser.add_argument("-f", "--filehash" , metavar = 'filehash' , type=str, help="
 parser.add_argument("-ip", "--ipaddr", metavar='ip' , help="type desired ip adress for check")
 parser.add_argument("-u", "--url", help="type desired url")
 parser.add_argument("-ex", "--exchange", help="Toogle IBM X-Force Exchange Check" , action="store_true")
+parser.add_argument("-exp", "--export", help="Toogle Export Mode ForIBM X-Force Exchange Check" , action="store_true")
+parser.add_argument("-fe", "--fileread", help="Toogle File Export Mode ForIBM X-Force Exchange Check" , action="store_true")
 parser.add_argument("-vt", "--virustotal", help="Toogle Virus Total Check" , action="store_true")
 parser.add_argument("-ab", "--abuseipdb", help="Toogle Abuse IP DB Check" , action="store_true")
 parser.add_argument("-de", "--detailed", help="Toogle Detailed Analysis Check (Mainly for Virustotal)" , action="store_true")
@@ -93,16 +103,71 @@ args = parser.parse_args()
 
 if args.ipaddr != None:
 	if args.exchange is True:
-		allips_unlisted = args.ipaddr
-		allips = allips_unlisted.split(',')
-		for i in allips:
-			ip = i
-			request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
-			whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
-			report_data = json.loads(request.text)
-			whois_data = json.loads(whois.text)
-			result = reputationtool(ip, report_data, whois_data)
-			result.IBMIPReputation()
+		if args.export is True:
+			allips_unlisted = args.ipaddr
+			allips = allips_unlisted.split(',')
+			for i in allips:
+				ip = i
+				request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
+				whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
+				report_data = json.loads(request.text)
+				whois_data = json.loads(whois.text)
+				result = reputationtool(ip, report_data, whois_data)
+				result.IBMReputationExport()
+
+		elif args.fileread is True:
+			files = os.listdir("./Bulkoperations")
+			ipaddr = []
+			print("""Bulkoperations: This operation will help you to get reputation of ip's that inside of a file. 
+Operation supports the csv and txt files. Txt files must only contains the IP addresses line-by-line. A headerless csv won't be readed. If you have multiple headers (like if you want to select a spessific column from a multi-columned .csv) you will be asked to provide. 
+			""")
+			for i,v in enumerate(files):
+				print(i , v)
+			selected = files[int(input("Selectfile(number):"))]
+			fileextention = pathlib.Path("./Bulkoperations/" + selected).suffix
+			if fileextention == ".txt":
+				with open("./Bulkoperations/" + selected , "r") as r:
+					lines = r.readlines()
+					for i in lines:
+						i.strip("\n")
+						ipaddr.append(i)
+					for i in ipaddr:
+						ip = i
+						request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
+						whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
+						report_data = json.loads(request.text)
+						whois_data = json.loads(whois.text)
+						result = reputationtool(ip, report_data, whois_data)
+						result.IBMReputationExport()
+					print("Operation Completed")
+			if fileextention == ".csv":
+				header = input("Header: ")
+				if header == None:
+					raise Exception("You must provide a header name. If it is empty, convert it to a text file and use it that way.")
+				else:
+					file = pd.read_csv("./Bulkoperations/" + selected)
+					selectcolm = file[header]
+					for i in selectcolm:
+						ip = i
+						request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
+						whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
+						report_data = json.loads(request.text)
+						whois_data = json.loads(whois.text)
+						result = reputationtool(ip, report_data, whois_data)
+						result.IBMReputationExport()
+
+		else:
+			allips_unlisted = args.ipaddr
+			allips = allips_unlisted.split(',')
+			for i in allips:
+				ip = i
+				request = requests.get("https://api.xforce.ibmcloud.com/ipr/" + ip , auth=(authkeyexch, authpasswdexch) , headers = {'Accept': 'application/json'})
+				whois = requests.get("https://api.xforce.ibmcloud.com/whois/" + ip ,  auth=(authkeyexch , authpasswdexch))
+				report_data = json.loads(request.text)
+				whois_data = json.loads(whois.text)
+				result = reputationtool(ip, report_data, whois_data)
+				result.IBMIPReputation()
+
 	else:
 		pass
 	if args.abuseipdb is True:

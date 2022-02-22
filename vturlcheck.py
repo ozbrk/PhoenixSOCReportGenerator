@@ -46,6 +46,7 @@ class virustotalurlcheck:
         main_result_table.add_row("Timeout" , timeout)
         console.print(main_result_table)
         for indicatorname , category , result , method , engine_name in scanresults:
+            
             engine_table=Table(show_header=False, show_lines=True)
             engine_table.add_row("Engine" , indicatorname)
             engine_table.add_row("Category" , category)
