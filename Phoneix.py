@@ -2,7 +2,7 @@
 ## 02.04.2020
 ## The program intended to analyze the given IP adress, hash value, file or file name given by user with IBM X-Force Exchange, Virus Total and Abuse IP DB
 ## The results will printed out as a report when everything is done and finished.
-# Test Comment
+
 # IMPORTS ##########################################################################################################################
 # try:
 from __future__ import print_function
@@ -41,8 +41,7 @@ try:
 	with open("apicreds.json") as read_file:
 		cred = json.loads(read_file.read())
 except:
-	print("""[ERR] Credentials haven't provided! Run the setup.py first with the following command: "python3 setup.py" """)
-	sys.exit(0)
+    raise
 
 with open("apicreds.json") as read_file:
     cred = json.loads(read_file.read())
@@ -336,5 +335,3 @@ if args.filehash != None:
 	if args.abuseipdb is True:
 		print("This operation is not supported by abuseipdb. Please type -h to gather more information.")
 		sys.exit(0)
-
-#####################################################################################################################################
